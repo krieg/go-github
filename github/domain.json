@@ -1,0 +1,4 @@
+{
+	"BaseURL": "https://ghe-host/api/v3/",
+	"UploadURL": "https://uploads.ghe-host/"
+}

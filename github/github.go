@@ -3,6 +3,10 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+/*
+	Modified by krieg (richard.krieg@gmail.com) for use with GitHub Enterprise
+*/
+
 package github
 
 import (
@@ -14,6 +18,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 	"reflect"
 	"strconv"
 	"strings"
@@ -89,6 +94,13 @@ const (
 	mediaTypeTrafficPreview = "application/vnd.github.spiderman-preview+json"
 )
 
+// Domain represents configuration items related to the server's domain.
+// Allows for use of GitHub Enterprise endpoints.
+type Domain struct {
+	BaseURL   string
+	UploadURL string
+}
+
 // A Client manages communication with the GitHub API.
 type Client struct {
 	clientMu sync.Mutex   // clientMu protects the client during calls that modify the CheckRedirect func.
@@ -112,6 +124,7 @@ type Client struct {
 	common service // Reuse a single struct instead of allocating one for each service on the heap.
 
 	// Services used for talking to different parts of the GitHub API.
+	Admin          *AdminService
 	Activity       *ActivityService
 	Authorizations *AuthorizationsService
 	Gists          *GistsService
@@ -147,6 +160,23 @@ type UploadOptions struct {
 	Name string `url:"name,omitempty"`
 }
 
+// retrieveURLs fetches the base and upload URLs for the GitHub server
+// from the provided JSON config file
+func retrieveURLs(config string) (*Domain, error) {
+	file, openErr := os.Open(config)
+	if openErr != nil {
+		return nil, openErr
+	}
+	decoder := json.NewDecoder(file)
+	domain := Domain{}
+	err := decoder.Decode(&domain)
+	if err != nil {
+		return nil, err
+	}
+
+	return &domain, nil
+}
+
 // addOptions adds the parameters in opt as URL query parameters to s.  opt
 // must be a struct whose fields may contain "url" tags.
 func addOptions(s string, opt interface{}) (string, error) {
@@ -177,11 +207,22 @@ func NewClient(httpClient *http.Client) *Client {
 	if httpClient == nil {
 		httpClient = http.DefaultClient
 	}
+
 	baseURL, _ := url.Parse(defaultBaseURL)
 	uploadURL, _ := url.Parse(uploadBaseURL)
+	d, err := retrieveURLs("domain.json")
+	if err == nil {
+		if d.BaseURL != "" {
+			baseURL, _ = url.Parse(d.BaseURL)
+		}
+		if d.UploadURL != "" {
+			uploadURL, _ = url.Parse(d.UploadURL)
+		}
+	}
 
 	c := &Client{client: httpClient, BaseURL: baseURL, UserAgent: userAgent, UploadURL: uploadURL}
 	c.common.client = c
+	c.Admin = (*AdminService)(&c.common)
 	c.Activity = (*ActivityService)(&c.common)
 	c.Authorizations = (*AuthorizationsService)(&c.common)
 	c.Gists = (*GistsService)(&c.common)
