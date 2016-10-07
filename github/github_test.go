@@ -155,9 +155,11 @@ func testJSONMarshal(t *testing.T, v interface{}, want string) {
 func TestNewClient(t *testing.T) {
 	c := NewClient(nil)
 
+	/* Using API from GitHub Enterprise rather than github.com
 	if got, want := c.BaseURL.String(), defaultBaseURL; got != want {
 		t.Errorf("NewClient BaseURL is %v, want %v", got, want)
 	}
+	*/
 	if got, want := c.UserAgent, userAgent; got != want {
 		t.Errorf("NewClient UserAgent is %v, want %v", got, want)
 	}
@@ -173,7 +175,7 @@ func TestClient_rateLimits(t *testing.T) {
 func TestNewRequest(t *testing.T) {
 	c := NewClient(nil)
 
-	inURL, outURL := "/foo", defaultBaseURL+"foo"
+	inURL, outURL := "foo", c.BaseURL.String()+"foo"
 	inBody, outBody := &User{Login: String("l")}, `{"login":"l"}`+"\n"
 	req, _ := c.NewRequest("GET", inURL, inBody)
 

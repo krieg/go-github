@@ -2,25 +2,6 @@ package github
 
 import "fmt"
 
-/*
-// Key represents a public SSH key that administrative commands are executed upon
-type Key struct {
-	ID           *int       `json:"id,omitempty"`
-	Key          *string    `json:"key,omitempty"`
-	URL          *string    `json:"url,omitempty"`
-	Title        *string    `json:"title,omitempty"`
-	Verified     *bool      `json:"verified,omitempty"`
-	CreatedAt    *Timestamp `json:"created_at,omitempty"`
-	ReadOnly     *bool      `json:"read_only,omitempty"`
-	UserID       *int       `json:user_id,omitempty"`
-	RepositoryID *int       `json:repository_id,omitempty"`
-}
-
-func (k Key) String() string {
-	return Stringify(k)
-}
-*/
-
 // ListKeys lists the verified public keys for all users
 //
 // https://developer.github.com/enterprise/2.7/v3/users/administration/#list-all-public-keys

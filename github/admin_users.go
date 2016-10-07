@@ -8,35 +8,6 @@ import "fmt"
 // Enterprise API docs: https://developer.github.com/enterprise/2.7/v3/users/administration/
 type AdminService service
 
-/*
-// User represents a GitHub user that administrative commands are executed upon
-type User struct {
-	Login      *string `json:"login,omitempty"`
-	ID         *int    `json:"id,omitempty"`
-	AvatarURL  *string `json:"avatar_url,omitempty"`
-	HTMLURL    *string `json:"html_url,omitempty"`
-	GravatarID *string `json:"gravatar_id,omitempty"`
-	Type       *string `json:"type,omitempty"`
-	SiteAdmin  *bool   `json:"site_admin,omitempty"`
-
-	// API URLs
-	URL               *string `json:"url,omitempty"`
-	EventsURL         *string `json:"events_url,omitempty"`
-	FollowingURL      *string `json:"following_url,omitempty"`
-	FollowersURL      *string `json:"followers_url,omitempty"`
-	GistsURL          *string `json:"gists_url,omitempty"`
-	OrganizationsURL  *string `json:"organizations_url,omitempty"`
-	ReceivedEventsURL *string `json:"received_events_url,omitempty"`
-	ReposURL          *string `json:"repos_url,omitempty"`
-	StarredURL        *string `json:"starred_url,omitempty"`
-	SubscriptionsURL  *string `json:"subscriptions_url,omitempty"`
-}
-
-func (u User) String() string {
-	return Stringify(u)
-}
-*/
-
 // Create creates a new GitHub user -- if external authN is used, ensure the login name
 // matches in the external system
 //
