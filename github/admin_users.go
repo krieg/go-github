@@ -33,8 +33,8 @@ func (s *AdminService) Create(user *User) (*User, *Response, error) {
 // matches in the external system
 //
 // https://developer.github.com/enterprise/2.7/v3/users/administration/#rename-an-existing-user
-func (s *AdminService) Rename(newLogin string, user *User) (*User, *Response, error) {
-	u := fmt.Sprintf("/admin/users/%v", newLogin)
+func (s *AdminService) Rename(username string, user *User) (*User, *Response, error) {
+	u := fmt.Sprintf("admin/users/%v", username)
 
 	req, err := s.client.NewRequest("PATCH", u, user)
 	if err != nil {
@@ -47,11 +47,29 @@ func (s *AdminService) Rename(newLogin string, user *User) (*User, *Response, er
 	return uResp, resp, err
 }
 
+// Delete deletes a user including all of their repositories, gists, applications and
+// personal settings
+//
+// https://developer.github.com/enterprise/2.7/v3/users/administration/#delete-a-user
+func (s *AdminService) Delete(username string) (*Response, error) {
+	u := fmt.Sprintf("admin/users/%v", username)
+
+	req, err := s.client.NewRequest("DELETE", u, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.client.Do(req, nil)
+}
+
+/* Promote, Demote, Suspend and Unsuspend endpoints already have corresponding methods in
+	users_administration.go file
+
 // Promote promotes an ordinary user to a site administrator
 //
 // https://developer.github.com/enterprise/2.7/v3/users/administration/#promote-an-ordinary-user-to-a-site-administrator
-func (s *AdminService) Promote(user string) (*Response, error) {
-	u := fmt.Sprintf("users/%v/site_admin", user)
+func (s *AdminService) Promote(username string) (*Response, error) {
+	u := fmt.Sprintf("users/%v/site_admin", username)
 
 	req, err := s.client.NewRequest("PUT", u, nil)
 	if err != nil {
@@ -65,8 +83,8 @@ func (s *AdminService) Promote(user string) (*Response, error) {
 // Demote demotes a site administrator to an ordinary user
 //
 // https://developer.github.com/enterprise/2.7/v3/users/administration/#demote-a-site-administrator-to-an-ordinary-user
-func (s *AdminService) Demote(user string) (*Response, error) {
-	u := fmt.Sprintf("users/%v/site_admin", user)
+func (s *AdminService) Demote(username string) (*Response, error) {
+	u := fmt.Sprintf("users/%v/site_admin", username)
 
 	req, err := s.client.NewRequest("DELETE", u, nil)
 	if err != nil {
@@ -79,8 +97,8 @@ func (s *AdminService) Demote(user string) (*Response, error) {
 // Suspend suspends a user from the enterprise instance
 //
 // https://developer.github.com/enterprise/2.7/v3/users/administration/#suspend-a-user
-func (s *AdminService) Suspend(user string) (*Response, error) {
-	u := fmt.Sprintf("users/%v/suspended", user)
+func (s *AdminService) Suspend(username string) (*Response, error) {
+	u := fmt.Sprintf("users/%v/suspended", username)
 
 	req, err := s.client.NewRequest("PUT", u, nil)
 	if err != nil {
@@ -94,8 +112,8 @@ func (s *AdminService) Suspend(user string) (*Response, error) {
 // Unsuspend reinstates a user to the enterprise instance
 //
 // https://developer.github.com/enterprise/2.7/v3/users/administration/#unsuspend-a-user
-func (s *AdminService) Unsuspend(user string) (*Response, error) {
-	u := fmt.Sprintf("users/%v/suspended", user)
+func (s *AdminService) Unsuspend(username string) (*Response, error) {
+	u := fmt.Sprintf("users/%v/suspended", username)
 
 	req, err := s.client.NewRequest("DELETE", u, nil)
 	if err != nil {
@@ -104,18 +122,4 @@ func (s *AdminService) Unsuspend(user string) (*Response, error) {
 
 	return s.client.Do(req, nil)
 }
-
-// Delete deletes a user including all of their repositories, gists, applications and
-// personal settings
-//
-// https://developer.github.com/enterprise/2.7/v3/users/administration/#delete-a-user
-func (s *AdminService) Delete(user string) (*Response, error) {
-	u := fmt.Sprintf("admin/users/%v", user)
-
-	req, err := s.client.NewRequest("DELETE", u, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.client.Do(req, nil)
-}
+*/
