@@ -100,12 +100,12 @@ func TestUsersService_CreateKey(t *testing.T) {
 
 	key, _, err := client.Users.CreateKey(input)
 	if err != nil {
-		t.Errorf("Users.GetKey returned error: %v", err)
+		t.Errorf("Users.CreateKey returned error: %v", err)
 	}
 
 	want := &Key{ID: Int(1)}
 	if !reflect.DeepEqual(key, want) {
-		t.Errorf("Users.GetKey returned %+v, want %+v", key, want)
+		t.Errorf("Users.CreateKey returned %+v, want %+v", key, want)
 	}
 }
 
