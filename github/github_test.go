@@ -157,9 +157,10 @@ func TestNewClient(t *testing.T) {
 
 	/* Using API from GitHub Enterprise rather than github.com
 	if got, want := c.BaseURL.String(), defaultBaseURL; got != want {
+	*/
+	if got, want := c.BaseURL.String(), "https://github-dev.austin.utexas.edu/api/v3/"; got != want {
 		t.Errorf("NewClient BaseURL is %v, want %v", got, want)
 	}
-	*/
 	if got, want := c.UserAgent, userAgent; got != want {
 		t.Errorf("NewClient UserAgent is %v, want %v", got, want)
 	}
